@@ -9,7 +9,7 @@ Let's go over what that means.  All `code` examples are things to type in to the
 Clone the repo to your local machine. Navigate to a directory that you want to keep this repo. Running this command will create a new directory called `assignments-2019` in that directory.
 
 ```
-git clone git@github.com:carrot-u/assignments-2019.git
+git clone https://github.com/carrot-u/assignments-2019
 ```
 
 ## Whenever You Want To Submit An Assignment
