@@ -35,7 +35,7 @@ git checkout -b dave-assignment-0 # this creates a git branch called "dave-assig
 
 4) navigate to the assignment directory and create a folder for your work
 ```bash
-cd assignement-0
+cd assignment-0
 mkdir dschwantes # note: "dschwantes" is just an example directory name, please use your own name or username
 cd dschwantes
 ```
