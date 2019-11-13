@@ -2,11 +2,12 @@
 
 You will be turning in assignments by using Git, creating Pull Requests, and merging them into this repo.
 
-Let's go over what that means.  All `code` examples are things to type in to the command line.
+Let's go over what that means.  All `code` examples are things to type in to the command line. Make sure to change the
+branch name from `dave-` to a unique string of your own so you won't create the same branch as someone else.
 
 ## First Time You Do This On A Computer
 
-Clone the repo to your local machine. Navigate to a directory that you want to keep this repo. Running this command will create a new directory called `assignments-2019` in that directory.
+Clone the repo to your local machine. Navigate to a directory where you want to keep this repo. Running this command will create a new directory called `assignments-2019` in that directory.
 
 ```
 git clone https://github.com/carrot-u/assignments-2019
@@ -35,7 +36,7 @@ git checkout -b dave-assignment-0 # this creates a git branch called "dave-assig
 
 4) navigate to the assignment directory and create a folder for your work
 ```bash
-cd assignement-0
+cd assignment-0
 mkdir dschwantes # note: "dschwantes" is just an example directory name, please use your own name or username
 cd dschwantes
 ```
@@ -50,7 +51,7 @@ git commit -m "files for Assignment 0" # the `-m` means you're adding a message 
 
 6) Push your branch to the remote repo (Github)
 ```bash
-git push origin -u dave-assignment-0 # the `-u` links the remote branch to this local one so you can pull without arguments, remember `dave-assignment-0` is the branch name for this example
+git push origin -u dave-assignment-0 # the `-u` links the remote branch to this local one so you can pull without arguments, remember `dave-assignment-0` should be replaced by the branch name YOU used for this example
 ```
 
 7) Go to the [Carrot U Assignments Github page](https://github.com/carrot-u/assignments-2019) and [create a Pull Request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) for your branch.
