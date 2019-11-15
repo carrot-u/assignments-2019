@@ -126,7 +126,9 @@ ORDER BY CREATED_AT ASC
 LIMIT 10;
 
 
-
+SELECT DATEADD('year', 5, to_timestamp_ntz(convert_timezone('UTC', 'US/Pacific', CREATED_AT))::DATE)
+FROM ECLIPSE.USERS 
+WHERE ID = 22438411;
 
 
 
