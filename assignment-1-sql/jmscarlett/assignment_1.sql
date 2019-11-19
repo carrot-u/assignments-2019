@@ -59,5 +59,56 @@ limit 10;
 
 -- duplicates occur because there are multiple shopper ids associated with the batch. Is this because it logs all of the shoppers it offered this batch to?
 
+---------------
+-- Bonus Questions
+-- Bonus Question 1
+select *
+from users
+where id = 56259092
+
+-- Bonus Question 2 -- 
+--dave's orders = 38
+
+select count(*)
+from orders
+where user_id = 22438411
+
+-- Bonus Question 3 -- 
+--is this question different than question #1?
+select *
+from fact_order
+where charge_amount > 500
+and canceled_at is null
+and completed_at is not null
+order by completed_at desc
+limit 1;
+
+---- Bonus Question 4 -- 
+
+select count(*)
+from order_deliveries
+where warehouse_id = 1000
+and delivered_at >= dateadd('day', -1, getdate()) 
+and delivered_at is not null
 
 
+---- Bonus Question 5 -- 
+
+select o.user_id, od.delivered_at
+from order_deliveries od
+left join orders o on od.order_id = o.id    
+where warehouse_id = 1000
+and delivered_at is not null
+order by delivered_at ASC
+limit 10
+
+---- Bonus Question 6 -- 
+
+with daves_account AS (select * 
+from users
+where id = 22438411
+limit 10)
+
+select  TO_TIMESTAMP_NTZ(CONVERT_TIMEZONE('America/Los_Angeles', dateadd('year', 5, created_at)))
+as daves_5_year
+from daves_account
