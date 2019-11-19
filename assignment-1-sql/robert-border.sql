@@ -52,16 +52,15 @@ order by 1
 -- Question 4
 -- For each of the age range categories you created in the previous question, what is the:
     -- Average delivery counts per age range of shoppers_
-    -- Average mpi Rank those ranges from the highest average mpi to the lowest.
-
--- Average MPI column exists in snowfalke on table instadata.rds_data.drivers but does not exist in psql main
--- Average MPI column is all null
+    -- Average mpi Rank those ranges from the highest average mpi to the lowest. 
 
 with raw as (
-    select id
-        ,datediff('month',hired_at,current_date()) as tenure
-        ,mpi_average
-    from drivers
+    select d.id
+        ,datediff('month',d.hired_at,current_date()) as tenure
+        ,sm.total_mpi
+        ,sm.total_deliveries_count
+    from drivers d
+    left join shopper_metrics sm on sm.shopper_id = d.id
     where active = true
 ),
 bin as (
@@ -72,18 +71,18 @@ bin as (
             when tenure >= 6 then '6 - 12'
             when tenure >= 0  then '0  - 6'
             else 'no tenure' end as tenure_bins
-        ,avg(mpi_average) as mpi_average
+        ,round(sum(total_deliveries_count)/sum(total_mpi),2) as average_mpi
+        ,round(avg(total_deliveries_count),2) as avg_num_deliveries
         ,count(*) as num_drivers
     from raw
     group by 1
 )
 
 select tenure_bins
-    ,mpi_average
-    ,round(sum(num_drivers) / (select sum(num_drivers) from bin),2) as pct_of_drivers
+    ,average_mpi
+    ,avg_num_deliveries
 from bin
-group by 1, 2
-order by 3 desc
+order by 2 desc
 
 
 -- Question 5
