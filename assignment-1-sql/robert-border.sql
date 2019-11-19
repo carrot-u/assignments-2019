@@ -11,6 +11,8 @@ LIMIT 1;
 -- What GMV have we generated, how many orders were made per week in the last 8 weeks in Canada? Order the results from the most recent week to the oldest.
 
 SELECT date_trunc('week', o.created_at) AS WEEK
+  ,count(distinct o.id) as num_orders
+  ,sum(o.charge_amount) as GMV
 FROM fact_order o
 JOIN zones z ON z.id = o.zone_id
 JOIN regions r ON r.id = z.region_id
