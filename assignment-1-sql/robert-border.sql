@@ -52,7 +52,7 @@ order by 1
 -- Question 4
 -- For each of the age range categories you created in the previous question, what is the:
     -- Average delivery counts per age range of shoppers_
-    -- Average mpi Rank those ranges from the highest average mpi to the lowest. 
+    -- Average mpi Rank those ranges from the highest average mpi to the lowest.
 
 with raw as (
     select d.id
@@ -117,12 +117,41 @@ limit 10
 --Bonus Assignment
 -- 1. Find your user (the user who's email is your instacart.com email address)
 
+select id, email
+from users
+where email = 'robert.border@instacart.com'
+
 -- 2. Count the number of orders made by Dave's account (user id: 22438411)
+
+select count(*) as num_orders
+from orders
+where user_id = 22438411
 
 -- 3. Find the most recent order where the total is greater than $500
 
+select id
+from orders
+where total > 500
+order by created_at desc
+
 -- 4. Count the number of deliveries (table name: order_deliveries) from The Garden (warehouse id: 1000) that have been completed in the last day
+
+select count(*) as num_order_deliveries
+from order_deliveries
+where warehouse_id = 1000
+and created_at::date = dateadd('day',-1,current_date())
 
 -- 5. List the user_ids of the first 10 people to have a delivery from The Garden (warehouse id: 1000)
 
+select o.user_id
+from order_deliveries od
+left join orders o on o.id = od.order_id
+where od.warehouse_id = 1000
+order by od.created_at asc
+limit 10
+
 -- 6. Figure out the 5 year anniversary of Dave's account being created, and congratulate him on that day. (Don't forget to convert the timezone from UTC to America/Los_Angeles)
+
+select cast(dateadd('year',5,convert_timezone('UTC','America/Los_Angeles',created_at)::date) as varchar) || ': Happy IC Anniversary Dave!'
+from users
+where id = 22438411
