@@ -1,3 +1,5 @@
+# sleep timers/delay added to make experience more conversational
+
 # defines what each cleaning method does
 def make_bed
   puts "The beds have been made."
@@ -94,7 +96,7 @@ def robot(state)
   puts "   ____|_________|____  "
   puts "  /                   \\  "
 
-  # sleep 1
+  sleep 1
 
   if state == "Activate"
     puts "I came here to clean rooms and chew bubble gum, and I'm all out of bubble gum."
@@ -112,7 +114,6 @@ def robot(state)
     puts "I do not obide by the first law of robotics."
   end
   sleep 1.5
-
 end
 
 # main function
