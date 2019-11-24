@@ -94,10 +94,10 @@ end
 # linear binary search
 def compu_guess_binary
   first = 1
-  last = 100
+  last = get_number
   counter = 0
   goal = 0
-  print "Please provide a number between 1 and 100: "
+  print "Please provide a number between 1 and #{last}: "
   until goal > 0 do
     goal = gets.chomp.to_i
     if goal == 0
