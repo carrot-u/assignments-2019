@@ -11,6 +11,7 @@ select_room = gets.chomp
 rooms.push(select_room)
 
 
+
 def dust(room)
   puts "The #{room} has been dusted"
 end
@@ -78,15 +79,24 @@ def clean_house(rooms)
   print_robot_face
   puts "\n"
   sleep(1)
+  cost = 0;
   rooms.each do |room|
     puts "Begin cleaning #{room}..."
     clean_room(room)
+    if room == "bedroom"
+      cost = 10
+    elsif room == "kitchen"
+      cost = 15
+    else
+      cost = 20
+    end
     puts "*" * 40
     puts "\n"
     sleep(1)
   end
 
   puts "House cleaning complete. Please remit payment. Venmo preferred."
+  puts "Your bill is $" + cost.to_s
   print_robot_face_money
 end
 
