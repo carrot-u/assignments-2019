@@ -11,11 +11,11 @@ def select_warehouse
     print "| #{store} |"
   end
   puts "\n"
-  while stores.include?(selected_store) == false do
+  while !stores.include?(selected_store) do
     print "\nSelect an available store: "
     selected_store = gets.chomp
   end
-  return selected_store
+  selected_store
 end
 
 def aisle_prompt
