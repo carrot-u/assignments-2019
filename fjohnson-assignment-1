@@ -1,0 +1,142 @@
+QUESTION 1
+
+SELECT id, charge_amount, completed_at FROM fact_order
+WHERE charge_amount > 500
+AND completed_at IS NOT NULL
+ORDER BY completed_at DESC
+LIMIT 1;
+
+--------------------------------------------------------------
+QUESTION 2
+
+WITH canada_8_weeks AS ( 
+    SELECT id, DATE_TRUNC('week', completed_at) AS week 
+    FROM fact_order
+    WHERE completed_at >= current_date - interval '8 week'
+    AND country_id = 124
+    )
+                    
+SELECT week, COUNT(*) AS "number of orders", SUM(charge_amount) AS "GMV"
+FROM fact_order
+INNER JOIN countries
+    ON fact_order.country_id = countries.id
+INNER JOIN canada_8_weeks
+    ON fact_order.id = canada_8_weeks.id
+WHERE country_id = 124
+GROUP BY week
+ORDER BY week DESC
+LIMIT 8
+OFFSET 1;
+
+--------------------------------------------------------------
+QUESTION 3
+
+# this was before i figured out how to use CASE soo... sorry lol
+
+WITH shoppers AS (
+    SELECT COUNT(*) AS shopper_count, DATEDIFF(month, hired_at, current_date) AS months_active, ROW_NUMBER() over (order by months_active) AS id
+    FROM drivers 
+    WHERE active = 1
+    AND hired_at IS NOT NULL 
+    GROUP BY months_active 
+    ORDER BY months_active
+    ),
+
+    under_six AS (
+    SELECT *
+    FROM shoppers
+    WHERE months_active < 6
+    ),
+
+    six_to_twelve AS (
+    SELECT *
+    FROM shoppers
+    WHERE months_active >= 6
+    AND months_active < 12
+    ),
+    
+    twelve_to_eighteen AS (
+    SELECT *
+    FROM shoppers
+    WHERE months_active >= 12
+    AND months_active < 18
+    ),
+    
+    eighteen_to_twentyfour AS (
+    SELECT *
+    FROM shoppers
+    WHERE months_active >= 18
+    AND months_active < 24
+    ),
+    
+    over_twentyfour AS (
+    SELECT *
+    FROM shoppers
+    WHERE months_active >= 24
+    )
+
+SELECT 
+    SUM(under_six.shopper_count) * 100 / sum(shoppers.shopper_count)
+        AS under_six_months_percentage, 
+    SUM(six_to_twelve.shopper_count)  * 100 / sum(shoppers.shopper_count)
+        AS six_to_twelve_months_percentage,
+    SUM(twelve_to_eighteen.shopper_count)  * 100 / sum(shoppers.shopper_count)
+        AS twelve_to_eighteen_months_percentage,
+    SUM(eighteen_to_twentyfour.shopper_count)  * 100 / sum(shoppers.shopper_count)
+        AS eighteen_to_twentyfour_months_percentage,
+    SUM(over_twentyfour.shopper_count)  * 100 / sum(shoppers.shopper_count)
+        AS over_twentyfour_months_percentage
+FROM under_six
+FULL OUTER JOIN six_to_twelve
+    ON under_six.id = six_to_twelve.id
+FULL OUTER JOIN twelve_to_eighteen
+    ON under_six.id = twelve_to_eighteen.id 
+FULL OUTER JOIN eighteen_to_twentyfour
+    ON under_six.id = eighteen_to_twentyfour.id
+FULL OUTER JOIN over_twentyfour
+    ON under_six.id = over_twentyfour.id
+FULL OUTER JOIN shoppers
+    ON under_six.id = shoppers.id;
+
+--------------------------------------------------------------
+QUESTION 4
+
+WITH ages AS (
+    SELECT id,
+        CASE 
+            WHEN datediff(month, hired_at, current_date) between 0 and 5 THEN '0-6 Months'
+            WHEN datediff(month, hired_at, current_date) between 6 and 11 THEN '6-12 Months'
+            WHEN datediff(month, hired_at, current_date) between 12 and 17 THEN '12-18 Months'
+            WHEN datediff(month, hired_at, current_date) between 18 and 24 THEN '18-24 Months'
+            WHEN datediff(month, hired_at, current_date) > 24 THEN '>24 Months'
+        END AS shopper_age
+    
+FROM drivers
+WHERE hired_at IS NOT NULL
+)
+
+SELECT shopper_age, AVG(total_deliveries_count) AS average_deliveries, AVG(total_mpi) AS average_mpi
+FROM ages
+INNER JOIN shopper_metrics
+    ON ages.id = shopper_metrics.shopper_id
+GROUP BY shopper_age
+ORDER BY average_mpi DESC;
+
+--------------------------------------------------------------
+QUESTION 5
+
+SELECT batch_id, COUNT(*)
+FROM fact_batch
+GROUP BY batch_id
+HAVING COUNT(*) > 1
+ORDER BY count(*)
+LIMIT 10;
+
+
+SELECT id, COUNT(*)
+FROM drivers
+GROUP BY id
+HAVING COUNT(*) > 1
+ORDER BY count(*)
+LIMIT 10;
+
