@@ -23,7 +23,7 @@ select case when datediff(month, hired_at, current_timestamp) < 6 then '0-6'
             when datediff(month, hired_at, current_timestamp) between 12 and 17 then '12-18'
             when datediff(month, hired_at, current_timestamp) between 18 and 23 then '18-24'
        else '24+' end as month,
-            count(id)/sum(count (id)) over () * 100 || '%'as pct
+            round(count(id)/sum(count (id)) over () * 100, 2) || '%'as pct
 from drivers
 where hired_at is not null and active = true
 group by 1;
@@ -41,7 +41,7 @@ with t as(
     where hired_at is not null and active = true
     group by 1,2
   )
-select t.month, sum(m.total_deliveries_count)/sum(total_mpi) as avg_cnt
+select t.month, round(sum(m.total_deliveries_count)/sum(total_mpi),2) as avg_cnt
 from t join shopper_metrics m on t.id = m.shopper_id
 group by 1
 order by avg_cnt desc;
@@ -57,7 +57,7 @@ order by cnt desc
 limit 10;
 
 --there are duplicate batch_id in fact_batch table since one batch could be sent to mulitple shoppers
-select batch_id, count(distinct) as cnt
+select batch_id, count(*) as cnt
 from fact_batch  
 group by 1
 having cnt > 1
