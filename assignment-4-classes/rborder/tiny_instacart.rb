@@ -1,56 +1,7 @@
 require 'yaml'
 require 'time'
 
- class OrderItem
-   attr_accessor :name, :aisle, :price
-
-   def initialize(name, aisle, price)
-     @name = name
-     @aisle = aisle
-     @price = price
-   end
- end
-
-class Catalog
-  attr_accessor :item_list
-  def initialize
-    @item_list = Array.new
-  end
-
-  def upload_catalog(list)
-    @item_list = list
-  end
-
-  def load_catalog
-    list = YAML.load_file("catalog.yml")
-    list.each do |i|
-      item = OrderItem.new(i[:name],i[:aisle],i[:cost])
-      @item_list.push(item)
-    end
-  end
-
-  def search_item_price(name)
-    result = 0
-    @item_list.each { |i| result += i.price if name == i.name }
-    return result
-  end
-end
-
-class Order
-  attr_reader :warehouse, :order_id, :basket, :total, :delivery_option, :created_at
-  attr_accessor :total
-
-  def initialize(order_id)
-    @warehouse = ""
-    @order_id = order_id
-    @basket = []
-    @total = 0
-    @state = "new"
-    @created_at = Time.now
-    @delivery_option = 0
-    @estimated_delivery_time = @created_at + @delivery_option
-  end
-
+module OrderWorkflow
   def select_warehouse(warehouses)
     selected_store = ""
     puts "Select which store you would like to shop from today."
@@ -137,7 +88,61 @@ class Order
     @state = "delivered"
   end
 
-  def receipt
+  def receipt(order)
+    order.basket.each { |i| puts }
+  end
+end
+
+ class OrderItem
+   attr_accessor :name, :aisle, :price
+
+   def initialize(name, aisle, price)
+     @name = name
+     @aisle = aisle
+     @price = price
+   end
+ end
+
+class Catalog
+  attr_accessor :item_list
+  def initialize
+    @item_list = Array.new
+  end
+
+  def upload_catalog(list)
+    @item_list = list
+  end
+
+  def load_catalog
+    list = YAML.load_file("catalog.yml")
+    list.each do |i|
+      item = OrderItem.new(i[:name],i[:aisle],i[:cost])
+      @item_list.push(item)
+    end
+  end
+
+  def search_item_price(name)
+    result = 0
+    @item_list.each { |i| result += i.price if name == i.name }
+    return result
+  end
+end
+
+class Order
+  include OrderWorkflow
+
+  attr_reader :warehouse, :order_id, :basket, :total, :delivery_option, :created_at
+  attr_accessor :total
+
+  def initialize(order_id)
+    @warehouse = ""
+    @order_id = order_id
+    @basket = []
+    @total = 0
+    @state = "new"
+    @created_at = Time.now
+    @delivery_option = 0
+    @estimated_delivery_time = @created_at + @delivery_option
   end
 end
 
