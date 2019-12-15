@@ -54,6 +54,7 @@ module OrderWorkflow
       deliv = gets.chomp.to_i
     end
     @delivery_option = deliv
+    @estimated_delivery_time = @created_at + (60 * 60 * deliv)
   end
 
   def shopping(catalog)
@@ -79,7 +80,7 @@ module OrderWorkflow
   end
 
   def delivering
-    puts "Shopping is now completed and your order is expected to arrive at #{}!.\n"
+    puts "Shopping is now completed and your order is expected to arrive at #{@estimated_delivery_time.getlocal}!.\n"
     @delivery_option.times do
       print "."
       sleep 0.5
@@ -88,8 +89,13 @@ module OrderWorkflow
     @state = "delivered"
   end
 
-  def receipt(order)
-    order.basket.each { |i| puts }
+  def receipt(catalog)
+    puts "-" * 40
+    puts "Your Instacart Order\n"
+    @basket.each { |i| puts "#{i}:     #{catalog.search_item_price(i)}"}
+    puts "-" * 40
+    puts "Instacart Delivery Fee:     3.99"
+    puts "Total:     #{@total + 3.99}"
   end
 end
 
@@ -132,7 +138,7 @@ class Order
   include OrderWorkflow
 
   attr_reader :warehouse, :order_id, :basket, :total, :delivery_option, :created_at
-  attr_accessor :total
+  attr_accessor :total, :estimated_delivery_time
 
   def initialize(order_id)
     @warehouse = ""
@@ -142,7 +148,7 @@ class Order
     @state = "new"
     @created_at = Time.now
     @delivery_option = 0
-    @estimated_delivery_time = @created_at + @delivery_option
+    @estimated_delivery_time = Time.new(1970,1,1,0,0,0)
   end
 end
 
@@ -260,6 +266,9 @@ order_in_progress.delivery_window
 customer.save_order(order_in_progress)
 order_in_progress.shopping(catalog)
 customer.save_order(order_in_progress)
+order_in_progress.delivering
+customer.save_order(order_in_progress)
+order_in_progress.receipt(catalog)
 
 
 
