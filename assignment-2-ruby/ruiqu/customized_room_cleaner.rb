@@ -43,8 +43,6 @@ def clean_room(room)
     puts "The #{room} requires no specific cleaning processes."
   end
 
-  mop_floor if room == "kitchen" || room == "bathroom"
-
   dust(room)
   puts "The #{room} has been cleaned."
 end
@@ -96,7 +94,7 @@ def get_room_names()
   rooms = []
   while answer != 4
     answer = ask("Enter the number to select a room: 0 - bedroom, 1 - kitchen, 2 - bathroom, 3 - livingroom, 4 - complete selection ")
-    if answer.between?(0, 3) 
+    if answer.between?(0, 3)
       if rooms.include?(available_rooms[answer])
         puts "The room #{available_rooms[answer]} is selected. "
       else
