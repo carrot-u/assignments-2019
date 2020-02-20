@@ -1,0 +1,27 @@
+<h1>Create Your Order</h1>
+
+<%= form_for [@user, order] do |f| %>
+  <div class="field">
+    <%= f.label :delivery_date %>
+    <%= f.text_field :date %>
+  </div>
+
+  <div class="field">
+    <%= f.label :delivery_time %>
+    <%= f.text_field :time %>
+  </div>
+
+  <div class="field">
+    <%= f.label :delivery_address %>
+    <%= f.text_field :address %>
+  </div>
+
+  <div class="field">
+    <%= f.label :delivery_instructions %>
+    <%= f.text_area :delivery_instructions %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

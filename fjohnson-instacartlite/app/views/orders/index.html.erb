@@ -1,0 +1,9 @@
+<h1>Your Orders</h1>
+
+<% @user.orders.each do |order| %>
+<div>
+    <p><strong>Delivery Date: </strong><%= order.date %></p>
+    <p><strong>Delivery Time: </strong><%= order.time %></p>
+    <p><%= link_to "View Order Detail", "/users/:user_id/orders/:id" %></p>
+</div>
+<% end %>
