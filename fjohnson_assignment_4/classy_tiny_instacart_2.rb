@@ -1,21 +1,7 @@
 module NewUser
 
-    class << self
-       attr_accessor :name, :phone, :address
-    end
-
-    def name
-        @name
-    end
-
-    def phone
-        @phone
-    end
+    attr_accessor :name, :phone, :address
     
-    def address
-        @address
-    end
-
     def create_account
         puts "Welcome to Instacart!"
         print "\nWhat is your name? "
@@ -36,25 +22,7 @@ end
 
 module GroceryList
 
-    class << self
-        attr_accessor :item_name, :item_brand, :item_quantity, :item_instructions
-    end
-
-    def item_name
-        @item_name
-    end
-
-    def item_brand
-        @item_brand
-    end
-
-    def item_quantity
-        @item_quantity
-    end
-
-    def item_instructions
-        @item_instructions
-    end
+    attr_accessor :item_name, :item_brand, :item_quantity, :item_instructions
 
     def create_item
         print "\nWhat item would you like to add? "
@@ -65,11 +33,16 @@ module GroceryList
         @item_quantity = gets.chomp.to_i
         print "Do you have additional instuctions? Choose Y for yes or N for no. "
         answer = gets.chomp
-        if answer == "N"
+        case answer
+        when "N", "n"
             @item_instructions = ""
-        else answer == "Y"
+        when "Y", "y"
             print "What are your additional instructions? "
             @item_instructions = gets.chomp
+        else
+            puts "You've selected an invalid option. Please try again."
+            print "Do you have additional instuctions? Choose Y for yes or N for no. "
+            answer = gets.chomp
         end
     end
 
@@ -88,13 +61,17 @@ module GroceryList
     def add_more
         print "\nWould you like to add another item? Choose Y for yes or N for no. "
         answer = gets.chomp
-        if answer == "N"
-            puts "Okay! Finished adding items."
-        else answer == "Y"
+        case answer
+        when "N", "n"
+            "Okay! Finished adding items."
+        when "Y", "y"
             puts "Okay! Lets add another item."
             Item.create_item
             @Item = Item.add(name: Item.item_name, brand: Item.item_brand, quantity: Item.item_quantity, instructions: Item.item_instructions)
             Item.add_more
+        else
+            puts "You've selected an invalid option. Please try again."
+            add_more
         end
     end
 
@@ -127,12 +104,17 @@ module Checkout
         puts "\n"
         print "Type C to confirm your delivery to #{User.address} on #{day} at #{time}. Type X to cancel. "
         answer = gets.chomp
-        if answer == "X"
-            puts "Okay, your order has not been placed."
-        else
+        case answer
+        when "X", "x"
+            puts "Okay, your order has been discarded."
+        when "C", "c"
             puts "\nCongratulations! You've saved #{rand(1..3)} hours by shopping with Instacart."
             puts "Your order has been placed for #{time} on #{day}."
             puts "Your shopper will call you at #{User.phone} when they arrive."
+        else
+            puts "You've selected an invalid option. Please try again."
+            print "Type C to confirm your delivery to #{User.address} on #{day} at #{time}. Type X to cancel. "
+            answer = gets.chomp
         end
     end
 end
@@ -155,6 +137,10 @@ class Order
     attr_reader :store
 
     def initialize
+        @store = store
+    end
+
+    def what_store
         print "\nWhat store would you like to order from? "
         store = gets.chomp
         puts"\n"
@@ -174,6 +160,7 @@ end
 User.create_account
 User1 = User.new(User.name, User.phone, User.address)
 Order1 = Order.new
+Order1.what_store
 Item.create_item
 Item1 = Item.add(name: Item.item_name, brand: Item.item_brand, quantity: Item.item_quantity, instructions: Item.item_instructions)
 Item.add_more
