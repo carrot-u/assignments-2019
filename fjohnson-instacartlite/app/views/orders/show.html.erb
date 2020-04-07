@@ -1,0 +1,11 @@
+<h1>Your Order</h1>>
+
+<h6>Delivery Date:</h6> <%= @order.date %>
+<h6>Delivery Time:</h6> <%= @order.time %>
+<h6>Delivery Address:</h6> <%= @order.address %>
+<h6>Delivery Instructions: </h6><%= @order.delivery_instructions %>
+
+<h5>Order Items</h5>
+list of items will go here
+
+<%= link_to 'Back', user_orders_path(@user) %>
